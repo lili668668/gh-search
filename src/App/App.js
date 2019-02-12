@@ -1,18 +1,29 @@
 import React from 'react'
-import { HashRouter as Router } from 'react-router-dom'
+import { HashRouter as Router, Switch } from 'react-router-dom'
+import { createHashHistory } from 'history'
 import CssBaseline from '@material-ui/core/CssBaseline'
+import { Provider } from 'react-redux'
+import ErrorBoundary from './core/ErrorBoundary'
+import LoadingPage from './core/LoadingPage'
 import routes from './modules/routes'
+import store from './store'
+
+const history = createHashHistory()
 
 function App (props) {
   return (
-    <React.Fragment>
+    <Provider store={store}>
       <CssBaseline />
-      <Router>
-        <React.Fragment>
-          {routes}
-        </React.Fragment>
+      <Router history={history}>
+        <ErrorBoundary>
+          <React.Suspense fallback={<LoadingPage />}>
+            <Switch>
+              {routes}
+            </Switch>
+          </React.Suspense>
+        </ErrorBoundary>
       </Router>
-    </React.Fragment>
+    </Provider>
   )
 }
 
