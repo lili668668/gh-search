@@ -1,15 +1,26 @@
 import React from 'react'
-import TextField from '@material-ui/core/TextField'
+import { connect } from 'react-redux'
+import SearchPage from './SearchPage'
+import actions from '../duck/actions'
+import * as selectors from '../duck/selectors'
 
-function Search (props) {
-  return (
-    <div>
-      <TextField
-        label="Search GitHub"
-        fullWidth
-      />
-    </div>
-  )
+class Search extends React.Component {
+  componentDidMount () {
+    this.props.fetchRepositories()
+  }
+
+  render () {
+    return (
+      <SearchPage {...this.props} />
+    )
+  }
 }
 
-export default Search
+export default connect(
+  (state, props) => ({
+    repositories: selectors.getRepositories(state, props)
+  }),
+  (dispatch) => ({
+    fetchRepositories: (option) => dispatch(actions.fetchRepositories(option))
+  })
+)(Search)

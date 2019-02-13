@@ -1,10 +1,11 @@
+import { of } from 'rxjs'
 import { ajax } from 'rxjs/ajax'
-import { switchMap, startWith } from 'rxjs/operators'
+import { switchMap, startWith, mapTo, catchError } from 'rxjs/operators'
 import { ofType } from 'redux-observable'
 import queryString from 'query-string'
 import { normalize, schema } from 'normalizr'
 
-function createFetchFromGithubEpic ({ baseUrl, type, fetchAction }) {
+export function createFetchFromGithubEpic ({ baseUrl, type, fetchAction }) {
   const repositorySchema = new schema.Entity('repositories')
 
   return (action$) => action$.pipe(
@@ -13,14 +14,10 @@ function createFetchFromGithubEpic ({ baseUrl, type, fetchAction }) {
       const metaId = `?${queryString.stringify(action.payload)}`
       const meta = { id: metaId }
       return ajax.getJSON(`${baseUrl}${metaId}`).pipe(
-        map(response => fetchAction.success(meta, normalize(response, { items: [repositorySchema] }))),
-        catch(error => fetchAction.failure(meta, error)),
+        mapTo(response => fetchAction.success(meta, normalize(response, { items: [repositorySchema] }))),
+        catchError(error => of(fetchAction.failure(meta, error))),
         startWith(fetchAction.request(meta))
       )
     })
   )
-}
-
-export default {
-  createFetchFromGithubEpic
 }

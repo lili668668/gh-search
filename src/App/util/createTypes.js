@@ -1,4 +1,4 @@
-function createRequestTypes (action, name, option = {}) {
+export function createRequestTypes (action, name, option = {}) {
   const { namespace } = option
   const prefix = namespace !== undefined ? `${namespace.toUpperCase()}/` : ''
   const uppercaseAction = action.toUpperCase()
@@ -13,8 +13,4 @@ function createRequestTypes (action, name, option = {}) {
     success: successType,
     failure: failureType
   }
-}
-
-export default {
-  createRequestTypes
 }

@@ -1,8 +1,7 @@
-import { combineReducers } from 'redux'
 import union from 'lodash/union'
 import merge from 'lodash/merge'
 
-function createEntity (name) {
+export function createEntity (name) {
   return function Entity (state = {}, action) {
     if (action.payload && action.payload.entities && action.payload.entities[name]) {
       return Object.assign({}, state, action.payload.entities[name])
@@ -11,7 +10,7 @@ function createEntity (name) {
   }
 }
 
-function createMeta (name, types) {
+export function createMeta (name, types) {
   const idsReducer = (state = [], action, key) => {
     switch (action.meta.action) {
       case 'fetch':
@@ -44,18 +43,24 @@ function createMeta (name, types) {
     return state
   }
 
+  const paginationReducer = (state = {}, action, key) => {
+    if (action.meta.id !== key) return state
+    if (action.payload && action.payload.pagination) return Object.assign({}, state, action.payload.pagination)
+    return state
+  }
+
   return function Meta (state = {}, action) {
+    if (!action.meta) return state
     const newState = merge(state, { [action.meta.id]: {} })
     return Object.keys(newState)
       .map(key => {
-        const newItem = { status: statusReducer(state[key].status, action, key), ids: idsReducer(state[key].ids, action, key) }
+        const newItem = {
+          status: statusReducer(state[key].status, action, key),
+          ids: idsReducer(state[key].ids, action, key),
+          pagination: paginationReducer(state[key].pagination, action, key)
+        }
         return { [key]: newItem }
       })
       .reduce((meta, item) => Object.assign({}, meta, item), {})
   }
-}
-
-export default {
-  createEntity,
-  createMeta
 }
