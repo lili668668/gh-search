@@ -1,26 +1,15 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import SearchPage from './SearchPage'
-import actions from '../duck/actions'
-import * as selectors from '../duck/selectors'
+import { useFetchRepositories, useRepositories } from '../duck/hooks'
+import SearchField from '../components/SearchField'
 
-class Search extends React.Component {
-  componentDidMount () {
-    this.props.fetchRepositories()
-  }
-
-  render () {
-    return (
-      <SearchPage {...this.props} />
-    )
-  }
+function Search (props) {
+  const repositories = useRepositories([])
+  console.log(repositories)
+  return (
+    <section>
+      <SearchField />
+    </section>
+  )
 }
 
-export default connect(
-  (state, props) => ({
-    repositories: selectors.getRepositories(state, props)
-  }),
-  (dispatch) => ({
-    fetchRepositories: (option) => dispatch(actions.fetchRepositories(option))
-  })
-)(Search)
+export default Search
