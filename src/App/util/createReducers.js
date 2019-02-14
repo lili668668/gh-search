@@ -4,7 +4,7 @@ import merge from 'lodash/merge'
 export function createEntity (name) {
   return function Entity (state = {}, action) {
     if (action.payload && action.payload.entities && action.payload.entities[name]) {
-      return Object.assign({}, state, action.payload.entities[name])
+      return Object.assign({}, state, { [name]: action.payload.entities[name] })
     }
     return state
   }
@@ -51,16 +51,18 @@ export function createMeta (name, types) {
 
   return function Meta (state = {}, action) {
     if (!action.meta) return state
-    const newState = merge(state, { [action.meta.id]: {} })
-    return Object.keys(newState)
+    const selectedState = Object.assign({}, state[name])
+    let newSelectedState = merge(selectedState, { [action.meta.id]: {} })
+    newSelectedState = Object.keys(newSelectedState)
       .map(key => {
         const newItem = {
-          status: statusReducer(state[key].status, action, key),
-          ids: idsReducer(state[key].ids, action, key),
-          pagination: paginationReducer(state[key].pagination, action, key)
+          status: statusReducer(newSelectedState[key].status, action, key),
+          ids: idsReducer(newSelectedState[key].ids, action, key),
+          pagination: paginationReducer(newSelectedState[key].pagination, action, key)
         }
         return { [key]: newItem }
       })
       .reduce((meta, item) => Object.assign({}, meta, item), {})
+    return merge({}, state, { [name]: newSelectedState })
   }
 }

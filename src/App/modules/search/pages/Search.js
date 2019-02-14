@@ -1,13 +1,21 @@
 import React from 'react'
-import { useFetchRepositories, useRepositories } from '../duck/hooks'
+import { replace } from 'connected-react-router'
 import SearchField from '../components/SearchField'
 
+import { useFetchByQuery, useSelector } from '../../../util/hooks'
+import { getRepositories, getQuery } from '../duck/selectors'
+import { fetchRepositories } from '../duck/actions'
+
 function Search (props) {
-  const repositories = useRepositories([])
-  console.log(repositories)
+  const repositories = useSelector(getRepositories)
+  const defaultQuery = useSelector(getQuery)
+  const [query, setQuery] = useFetchByQuery(defaultQuery, fetchRepositories, replace)
   return (
     <section>
-      <SearchField />
+      <SearchField
+        defaultValue={defaultQuery.q}
+        onChange={(event) => setQuery({ q: event.target.value })}
+      />
     </section>
   )
 }
