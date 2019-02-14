@@ -1,5 +1,6 @@
 import { combineEpics } from 'redux-observable'
 import { normalize, schema } from 'normalizr'
+import humps from 'humps'
 import { createFetchEpic } from '../../../util/createEpics'
 import * as actions from './actions'
 import * as types from './types'
@@ -11,7 +12,9 @@ const fetchRepositoriesEpic = createFetchEpic({
   getPayload: (response) => {
     const repositoriesSchema = new schema.Entity('repositories')
     const normalizedData = normalize(response, { items: [repositoriesSchema] })
-    return { entities: normalizedData.entities, result: { repositories: normalizedData.result.items } }
+    const entities = humps.camelizeKeys(normalizedData.entities)
+    const result = { repositories: normalizedData.result.items }
+    return { entities, result }
   }
 })
 
