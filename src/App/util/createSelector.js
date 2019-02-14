@@ -13,3 +13,10 @@ export function createListSelector (selectors) {
     }
   )
 }
+
+export function createMetaSelector (selectors) {
+  return createSelector(
+    selectors,
+    (search, meta) => meta[search] || {}
+  )
+}

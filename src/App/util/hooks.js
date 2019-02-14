@@ -19,8 +19,10 @@ export function useFetchByQuery (defaultQuery, fetchAction, routerAction = push)
   })
 
   const fetch = (query) => {
-    const newPath = `${path}?${queryString.stringify(query)}`
-    dispatch(routerAction(newPath))
+    if (!query.fetchByUrl) {
+      const newPath = `${path}?${queryString.stringify(query)}`
+      dispatch(routerAction(newPath))
+    }
     dispatch(fetchAction(query))
   }
 
@@ -30,4 +32,15 @@ export function useFetchByQuery (defaultQuery, fetchAction, routerAction = push)
 export function useSelector (selector, input = []) {
   const mapState = useCallback(selector, input)
   return useMappedState(mapState)
+}
+
+export function useScrollListener (handleScroll) {
+  const [initialized, setInitialized] = useState(false)
+  useEffect(() => {
+    if (!initialized) {
+      window.addEventListener('scroll', (event) => handleScroll(event))
+      setInitialized(true)
+    }
+    return window.removeEventListener('scroll', handleScroll)
+  })
 }
