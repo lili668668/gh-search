@@ -1,10 +1,10 @@
 import React, { useRef, useLayoutEffect, useCallback } from 'react'
 import { replace } from 'connected-react-router'
+import AppFrame from '../../../components/AppFrame'
+import ListCore from '../../../core/List'
+import InfiniteScroll from '../../../core/List/plugins/InfiniteScroll'
 import SearchField from '../components/SearchField'
-import ResultList from '../components/ResultList'
-import RepositoryListItem from '../components/RepositoryListItem'
-import InfiniteScrollList from '../components/InfiniteScrollList'
-
+import ListLayout from '../components/ListLayout'
 import { useFetchByQuery, useSelector } from '../../../util/hooks'
 import { getRepositories, getRepositoriesMeta, getQuery } from '../duck/selectors'
 import * as actions from '../duck/actions'
@@ -23,21 +23,19 @@ function Search (props) {
     fetchRepositories({ fetchByUrl: true, url: meta.pagination.nextUrl, metaId: meta.id })
   }, [ref])
   return (
-    <section>
+    <AppFrame>
       <SearchField
         defaultValue={defaultQuery.q}
         onChange={(event) => fetchRepositories({ q: event.target.value })}
       />
-      <ResultList
-        items={repositories}
-        listItemComponent={RepositoryListItem}
-      >
-        <InfiniteScrollList
+      <ListCore items={repositories}>
+        <ListLayout />
+        <InfiniteScroll
           loading={meta.status === 'loading'}
           loadMore={handleLoadMore}
         />
-      </ResultList>
-    </section>
+      </ListCore>
+    </AppFrame>
   )
 }
 

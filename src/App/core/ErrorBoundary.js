@@ -1,5 +1,5 @@
 import React from 'react'
-import ErrorPage from './ErrorPage'
+import PropTypes from 'prop-types'
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -17,10 +17,15 @@ class ErrorBoundary extends React.Component {
   }
 
   render() {
+    const { errorPage: ErrorPage } = this.props
     if (this.state.hasError) return (<ErrorPage />)
 
     return this.props.children
   }
+}
+
+ErrorBoundary.propTypes = {
+  errorPage: PropTypes.func.isRequired
 }
 
 export default ErrorBoundary

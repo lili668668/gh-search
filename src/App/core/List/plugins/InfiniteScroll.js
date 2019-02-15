@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Plugin, Template, TemplatePlaceholder } from '@devexpress/dx-react-core'
 import { useScrollListener } from '../../../util/hooks'
 
-function InfiniteScrollList (props) {
+function InfiniteScroll (props) {
   const { loadMore, loading } = props
   const handleScroll = useCallback(() => {
     const scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop
@@ -24,14 +24,14 @@ function InfiniteScrollList (props) {
   )
 }
 
-InfiniteScrollList.defaultProps = {
+InfiniteScroll.defaultProps = {
   loadMore: null,
   loading: false
 }
 
-InfiniteScrollList.propTypes = {
+InfiniteScroll.propTypes = {
   loadMore: PropTypes.func,
   loading: PropTypes.bool
 }
 
-export default InfiniteScrollList
+export default InfiniteScroll

@@ -5,7 +5,8 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import { Provider } from 'react-redux'
 import { StoreContext } from 'redux-react-hook'
 import ErrorBoundary from './core/ErrorBoundary'
-import LoadingPage from './core/LoadingPage'
+import LoadingPage from './components/LoadingPage'
+import ErrorPage from './components/ErrorPage'
 import routes from './modules/routes'
 import store from './store'
 import history from './store/history'
@@ -16,7 +17,7 @@ function App (props) {
       <Provider store={store}>
         <CssBaseline />
         <ConnectedRouter history={history}>
-          <ErrorBoundary>
+          <ErrorBoundary errorPage={ErrorPage}>
             <React.Suspense fallback={<LoadingPage />}>
               <Switch>
                 {routes}

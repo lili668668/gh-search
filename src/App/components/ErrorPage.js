@@ -27,7 +27,7 @@ function ErrorPage (props) {
     <Grid container direction="column" justify="center" alignItems="center" className={classes.root}>
       <ErrorIcon className={classnames(classes.icon, classes.error)} />
       <Typography className={classes.error} variant="body1">An unexpected error has occurred.</Typography>
-      <Typography className={classes.error} variant="body1">Please contact author: <a href={`mailTo:lili668668@gmail.com`} className={classes.anchor}>lili668668@mgmail.com</a></Typography>
+      <Typography className={classes.error} variant="body1">Please contact author: <a href="mailTo:lili668668@gmail.com" className={classes.anchor}>lili668668@mgmail.com</a></Typography>
     </Grid>
   )
 }
